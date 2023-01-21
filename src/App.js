@@ -11,7 +11,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const OPENSEA_LINK = 'https://testnets.opensea.io/ja/assets/goerli/';
 const TOTAL_MINT_COUNT = 3;
 // スマートコントラクトがdeployされたアドレス
-const CONTRACT_ADDRESS = "0x78F643E7ED77f4D476aF69b30302D90a1613B16d";
+const CONTRACT_ADDRESS = "0x7B1b9925B42E8BF39ed5AFB6bD745C4b3F3367D9";
 
 const App = () => {
   // ユーザのウォレットアドレスを格納するために使用する状態変数を遅疑
