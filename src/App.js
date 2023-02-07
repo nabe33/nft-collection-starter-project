@@ -9,16 +9,16 @@ import twitterLogo from './assets/twitter-logo.svg';
 const TWITTER_HANDLE = 'nabe33';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const OPENSEA_LINK = 'https://testnets.opensea.io/ja/assets/goerli/';
-const TOTAL_MINT_COUNT = 3;
+const TOTAL_MINT_COUNT = 5;
 // スマートコントラクトがdeployされたアドレス
-const CONTRACT_ADDRESS = "0x7B1b9925B42E8BF39ed5AFB6bD745C4b3F3367D9";
+const CONTRACT_ADDRESS = "0xCf57765a3b5Cf42c5E9d9Ecf96677181b656fC3F";
 
 const App = () => {
   // ユーザのウォレットアドレスを格納するために使用する状態変数を遅疑
   const [currentAccount, setCurrentAccount] = useState("");
   console.log("currentAccount(must be empty @1st time): ", currentAccount);
 
-  // tokenIDを画面表示に使えるようにする
+  // NFT発行数を見るためにtokenIDを画面表示に使えるようにする
   const [thisTokenId, setThisTokenId] = useState(0);
 
   // MyEpicNFT.solでeventがemitされた時に情報を受け取る
@@ -36,10 +36,11 @@ const App = () => {
           signer
         );
 
-        // eventがemitされる際にコントラクトから送信される情報を受け取る
+        // NewEpicNFTMinted eventがemitされる際にコントラクトから送信される情報を受け取る
         connectedContract.on("NewEpicNFTMinted", (from, tokenId) => {
           console.log(from, tokenId.toNumber());
-          setThisTokenId(tokenId.toNumber());
+          setThisTokenId(tokenId.toNumber()+1);
+//          setThisTokenId((prev) => prev + 1);
           alert(
             `あなたのウォレットにNFTを送信しました．OpenSeaに表示されるまで最大で10分かかることがあります．
             NFTへのリンクはこちらです： ${OPENSEA_LINK}${CONTRACT_ADDRESS}/${tokenId.toNumber()}`
@@ -54,7 +55,7 @@ const App = () => {
     }
   };
 
-  // ユーザが認証可能なウォレットアドレスを持っているか確認
+  // ユーザが認証可能なウォレットアドレスを持っているか確認．ページロード時に確認．
   const checkIfWalletIsConnected = async () => {
     // ユーザがMetamaskを持っているか確認
     const { ethereum } = window;
@@ -116,7 +117,7 @@ const App = () => {
           signer
         );
         console.log("Going to pop wallet now to pay gas...");
-        let nftTxn = await connectedContract.makeAnEpicNFT();
+        let nftTxn = await connectedContract.makeAnEpicNFT();  // ********
         console.log("Mining...please wait.");
         await nftTxn.wait();
         console.log("nftTxn: ", nftTxn);
@@ -154,13 +155,14 @@ const App = () => {
     checkIfWalletIsConnected();
   }, []);
 
+  
   return (
     <div className="App">
       <div className="container">
         <div className="header-container">
           <p className="header gradient-text">なべ's NFT Collection</p>
           <p className="sub-text">
-            あなただけの特別なNFTをMintしよう（3個限定！）💫
+            あなただけの特別なNFTをMintしよう（{TOTAL_MINT_COUNT}個限定！）💫
           </p>
           {/* 条件付きレンダリング*/}
           {currentAccount === "" 
@@ -168,7 +170,7 @@ const App = () => {
             : renderMintUI()}
         </div>
         <div className="mint-count">生成済みNFT数 {thisTokenId}/{TOTAL_MINT_COUNT}</div>
-        <div className="mint-count"><a href={OPENSEA_LINK+CONTRACT_ADDRESS+"/"+thisTokenId}>OpenSeaでNFTコレクションを表示</a></div>
+        <div className="mint-count"><a href={OPENSEA_LINK+CONTRACT_ADDRESS+"/"+thisTokenId} target="_blank" style={{ background: 'yellow' }}>OpenSeaでNFTコレクションを表示</a></div>
         
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
