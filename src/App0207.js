@@ -9,10 +9,9 @@ import twitterLogo from './assets/twitter-logo.svg';
 const TWITTER_HANDLE = 'nabe33';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const OPENSEA_LINK = 'https://testnets.opensea.io/ja/assets/goerli/';
-
 const TOTAL_MINT_COUNT = 10;
 // スマートコントラクトがdeployされたアドレス
-const CONTRACT_ADDRESS = "0x87f7446Af0B2d9a1A45f12982994AC450BCf3073";
+const CONTRACT_ADDRESS = "0x43a105E27cAD00dA7B02A076447159bf7fFcD449";
 
 const App = () => {
   // ユーザのウォレットアドレスを格納するために使用する状態変数を遅疑
@@ -31,7 +30,7 @@ const App = () => {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         // NFT発行
-        const connectedContract = new ethers.Contract(  
+        const connectedContract = new ethers.Contract(
           CONTRACT_ADDRESS,
           myEpicNft.abi,
           signer
@@ -65,22 +64,6 @@ const App = () => {
       return;
     } else {
       console.log("We have the ethereum object", ethereum);
-      // ***********************************************************************
-      const provider = new ethers.providers.Web3Provider(ethereum);
-        const signer = provider.getSigner();
-        // NFT発行
-        const connectedContract0 = new ethers.Contract(
-          CONTRACT_ADDRESS,
-          myEpicNft.abi,
-          signer
-        );
-      //
-      // 画面初期化時のNFT発行数を設定
-      connectedContract0.getMintCounter().then((value) => {
-        console.log("getMintCounter: ",value.toNumber());
-        setThisTokenId(value.toNumber());
-      });
-
     }
     // ユーザが認証可能なウォレットアドレスを持っている場合は，
     // ユーザに対してウォレットへのアクセス許可を求める．
@@ -187,7 +170,7 @@ const App = () => {
             : renderMintUI()}
         </div>
         <div className="mint-count">生成済みNFT数 {thisTokenId}/{TOTAL_MINT_COUNT}</div>
-        <div className="mint-count"><a href={OPENSEA_LINK+CONTRACT_ADDRESS+"/"+(thisTokenId - 1)} target="_blank" style={{ background: 'yellow' }}>OpenSeaで生成したNFTを表示</a></div>
+        <div className="mint-count"><a href={OPENSEA_LINK+CONTRACT_ADDRESS+"/"+thisTokenId} target="_blank" style={{ background: 'yellow' }}>OpenSeaでNFTコレクションを表示</a></div>
         
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
